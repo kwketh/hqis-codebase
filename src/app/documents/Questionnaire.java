@@ -38,7 +38,7 @@ public class Questionnaire extends data.base.Document
         q2.addAnswer("no", "No");
         addField(q2);
 
-        q3 = new Question("marketingField", "What is your preferred search engine?");
+        q3 = new Question("prefferedEngine", "What is your preferred search engine?");
         q3.addAnswer("altavista", "Altavista");
         q3.addAnswer("dogpile", "Dogpile");
         q3.addAnswer("google", "Google");
