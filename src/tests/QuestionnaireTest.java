@@ -14,14 +14,7 @@ public class QuestionnaireTest extends TestCase
     public void testQuestionnaire()
     {
         Questionnaire questionnaire = new Questionnaire("doc1");
-        StringWriter json = new StringWriter();
-        JSONWriter writer = new JSONWriter(json);
-        try {
-            questionnaire.toJSON(writer);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        String json = data.Utils.serialiseField(questionnaire);
         System.out.println(json);
-
     }
 }
