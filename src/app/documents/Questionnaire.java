@@ -1,6 +1,5 @@
 package app.documents;
 
-import core.base.Document;
 import app.fields.Question;
 
 /**
@@ -10,7 +9,7 @@ import app.fields.Question;
  * allow both loading and storing the questionnaires
  * on the HQIS server.
  */
-public class Questionnaire extends core.base.Document
+public class Questionnaire extends data.base.Document
 {
     Question q1, q2, q3;
 

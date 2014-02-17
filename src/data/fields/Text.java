@@ -1,9 +1,9 @@
-package core.fields;
+package data.fields;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-public class Text extends core.base.Field
+public class Text extends data.base.Field
 {
     String m_value;
 

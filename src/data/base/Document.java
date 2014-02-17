@@ -1,9 +1,7 @@
-package core.base;
+package data.base;
 
-import core.fields.Group;
-import core.fields.Text;
-
-import java.util.Date;
+import data.fields.Group;
+import data.fields.Text;
 
 /**
  * base.Document class.

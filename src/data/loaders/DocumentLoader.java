@@ -1,4 +1,4 @@
-package core.loaders;
+package data.loaders;
 
 public class DocumentLoader
 {

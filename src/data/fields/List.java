@@ -1,9 +1,8 @@
-package core.fields;
+package data.fields;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import core.base.Field;
+import data.base.Field;
 import org.json.*;
 
 /**

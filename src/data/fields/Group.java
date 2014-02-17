@@ -1,9 +1,8 @@
-package core.fields;
+package data.fields;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import core.base.Field;
+import data.base.Field;
 import org.json.*;
 
 /**
@@ -34,7 +33,7 @@ abstract public class Group extends Field
     public void addField(Field field)
     {
         if (m_fields.containsKey(field.getId()))
-            throw new Error("core.fields.Group cannot have two fields with same id");
+            throw new Error("data.fields.Group cannot have two fields with same id");
 
         m_fields.put(field.getId(), field);
     }

@@ -1,7 +1,6 @@
 package app.fields;
 
-import core.fields.Group;
-import core.fields.Text;
+import data.fields.Group;
 
 /**
  * fields.Question class.
@@ -12,19 +11,19 @@ import core.fields.Text;
  * fields such as "hint" or accessibility fields such
  * as "audio".
  *
- * @see core.fields.Group
+ * @see data.fields.Group
  */
 public class Question extends Group
 {
     /**
      * The actual question text visible to the user.
      */
-    private core.fields.Text m_question;
+    private data.fields.Text m_question;
 
     /**
      * A list of answers the question has.
      */
-    private core.fields.List<Answer> m_answers;
+    private data.fields.List<Answer> m_answers;
 
     public Question(String id, String questionText)
     {
@@ -35,10 +34,10 @@ public class Question extends Group
     @Override
     protected void setupFields()
     {
-        m_question = new core.fields.Text("question");
+        m_question = new data.fields.Text("question");
         addField(m_question);
 
-        m_answers = new core.fields.List<Answer>("answers");
+        m_answers = new data.fields.List<Answer>("answers");
         addField(m_answers);
     }
 

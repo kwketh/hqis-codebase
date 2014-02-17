@@ -1,7 +1,6 @@
 package app.fields;
 
-import core.base.Field;
-import core.fields.Text;
+import data.fields.Text;
 
 /**
  * fields.Answer class.

@@ -7,7 +7,7 @@ public class SampleTestCase extends TestCase
     /**
      * Test of equal method.
      *
-     * To run the test case,  look for 'Run SampleTestCase.testQuality' in the menus.
+     * To run the test case,  look for 'Run SampleTestCase.testEquality' in the menus.
      * The shortcut for IDEA IntelliJ is Fn+Ctrl+Shift+F11
      */
     public void testEquality() {

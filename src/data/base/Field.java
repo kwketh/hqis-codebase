@@ -1,4 +1,4 @@
-package core.base;
+package data.base;
 
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -17,7 +17,7 @@ import org.json.JSONWriter;
  *
  * The id is used to distinguish multiple fields
  * and the id should be unique per Group
- * (core.fields.Group).
+ * (data.fields.Group).
  *
  * This in general will improve code consistency
  * and to enforce certain rules before the
