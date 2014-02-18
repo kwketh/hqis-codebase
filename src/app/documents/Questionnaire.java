@@ -1,6 +1,7 @@
 package app.documents;
 
 import app.fields.Question;
+import data.fields.List;
 
 /**
  * documents.Questionnaire class.
@@ -11,7 +12,7 @@ import app.fields.Question;
  */
 public class Questionnaire extends data.base.Document
 {
-    Question q1, q2, q3;
+    List<Question> questions;
 
     /**
      * Constructor.
@@ -28,22 +29,25 @@ public class Questionnaire extends data.base.Document
     {
         super.setupFields();
 
-        q1 = new Question("sex", "Are you a male or female?");
+        questions = new List<Question>("questions");
+        addField(questions);
+
+        Question q1 = new Question("sex", "Are you a male or female?");
         q1.addAnswer("male", "Male");
         q1.addAnswer("female", "Female");
-        addField(q1);
+        questions.add(q1);
 
-        q2 = new Question("age1630", "Are you aged between 16 and 30?");
+        Question q2 = new Question("age1630", "Are you aged between 16 and 30?");
         q2.addAnswer("yes", "Yes");
         q2.addAnswer("no", "No");
-        addField(q2);
+        questions.add(q2);
 
-        q3 = new Question("prefferedEngine", "What is your preferred search engine?");
+        Question q3 = new Question("prefferedEngine", "What is your preferred search engine?");
         q3.addAnswer("altavista", "Altavista");
         q3.addAnswer("dogpile", "Dogpile");
         q3.addAnswer("google", "Google");
         q3.addAnswer("yahoo", "yahoo");
-        addField(q3);
+        questions.add(q3);
     }
 
 }

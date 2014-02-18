@@ -13,8 +13,11 @@ public class QuestionnaireTest extends TestCase
      */
     public void testQuestionnaire()
     {
-        Questionnaire questionnaire = new Questionnaire("doc1");
+        Questionnaire questionnaire = new Questionnaire("sample1");
+        questionnaire.setName("A sample questionnaire");
+
         String json = data.Utils.serialiseField(questionnaire);
+
         System.out.println(json);
     }
 }

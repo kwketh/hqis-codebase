@@ -68,4 +68,9 @@ abstract public class Document extends Group
         return m_type.getValue();
     }
 
+    public void setName(String name)
+    {
+        m_name.setValue(name);
+    }
+
 }

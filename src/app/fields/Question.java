@@ -34,6 +34,8 @@ public class Question extends Group
     @Override
     protected void setupFields()
     {
+        addField(new data.fields.Text("id", getId()));
+
         m_question = new data.fields.Text("question");
         addField(m_question);
 
