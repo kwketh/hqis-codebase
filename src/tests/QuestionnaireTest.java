@@ -18,6 +18,9 @@ public class QuestionnaireTest extends TestCase
 
         String json = data.Utils.serialiseField(questionnaire);
 
+        assertEquals(questionnaire.getId(), "sample1");
+        assertEquals(questionnaire.getName(), "A sample questionnaire");
+
         System.out.println(json);
     }
 }
