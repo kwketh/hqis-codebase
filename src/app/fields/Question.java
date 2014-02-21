@@ -25,10 +25,10 @@ public class Question extends Group
     {
         super(_id, getFields());
 
-        Text id = (Text) lookupField("id");
+        Text id = lookupField("id");
         id.setValue(_id);
 
-        Text questionText = (Text) lookupField("question");
+        Text questionText = lookupField("question");
         questionText.setValue(_questionText);
     }
 
@@ -43,7 +43,7 @@ public class Question extends Group
 
     public void addAnswer(Answer answer)
     {
-        List<Answer> answers = (List<Answer>) lookupField("answers");
+        List<Answer> answers = lookupField("answers");
         answers.add(answer);
     }
 

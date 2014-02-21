@@ -36,10 +36,10 @@ abstract public class Document extends Group
     {
         super(_id, _fields);
 
-        Text id = (Text) lookupField("id");
+        Text id = lookupField("id");
         id.setValue(_id);
 
-        Text type = (Text) lookupField("type");
+        Text type = lookupField("type");
         type.setValue(_type);
     }
 
@@ -53,6 +53,18 @@ abstract public class Document extends Group
     }
 
     /**
+     * Returns document name.
+     *
+     * @return {string}
+     *   the document name
+     */
+    public String getName()
+    {
+        Text name = lookupField("name");
+        return name.getValue();
+    }
+
+    /**
      * Returns document type.
      *
      * @return {string}
@@ -60,13 +72,19 @@ abstract public class Document extends Group
      */
     public String getType()
     {
-        Text type = (Text) lookupField("type");
+        Text type = lookupField("type");
         return type.getValue();
     }
 
+    /**
+     * Sets the document name.
+     *
+     * @param _name
+     *   the new document name
+     */
     public void setName(String _name)
     {
-        Text name = (Text) lookupField("name");
+        Text name = lookupField("name");
         name.setValue(_name);
     }
 

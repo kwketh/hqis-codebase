@@ -38,9 +38,9 @@ abstract public class Group extends Field
         m_fields.put(field.getId(), field);
     }
 
-    public Field lookupField(String id)
+    public<FieldType> FieldType lookupField(String id)
     {
-        return m_fields.get(id);
+        return (FieldType)m_fields.get(id);
     }
 
     @Override
