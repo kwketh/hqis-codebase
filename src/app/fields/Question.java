@@ -1,6 +1,12 @@
 package app.fields;
 
+import data.base.Field;
 import data.fields.Group;
+import data.fields.List;
+import data.fields.Text;
+
+import java.util.ArrayList;
+
 
 /**
  * fields.Question class.
@@ -15,41 +21,34 @@ import data.fields.Group;
  */
 public class Question extends Group
 {
-    /**
-     * The actual question text visible to the user.
-     */
-    private data.fields.Text m_question;
-
-    /**
-     * A list of answers the question has.
-     */
-    private data.fields.List<Answer> m_answers;
-
-    public Question(String id, String questionText)
+    public Question(String _id, String _questionText)
     {
-        super(id);
-        m_question.setValue(questionText);
+        super(_id, getFields());
+
+        Text id = (Text) lookupField("id");
+        id.setValue(_id);
+
+        Text questionText = (Text) lookupField("question");
+        questionText.setValue(_questionText);
     }
 
-    @Override
-    protected void setupFields()
+    protected static ArrayList<Field> getFields()
     {
-        addField(new data.fields.Text("id", getId()));
-
-        m_question = new data.fields.Text("question");
-        addField(m_question);
-
-        m_answers = new data.fields.List<Answer>("answers");
-        addField(m_answers);
+        ArrayList<Field> ret = new ArrayList<Field>();
+        ret.add(new data.fields.Text("id"));
+        ret.add(new data.fields.Text("question"));
+        ret.add(new data.fields.List<Answer>("answers"));
+        return ret;
     }
 
     public void addAnswer(Answer answer)
     {
-        m_answers.add(answer);
+        List<Answer> answers = (List<Answer>) lookupField("answers");
+        answers.add(answer);
     }
 
     public void addAnswer(String answerId, String answerText)
     {
-        m_answers.add(new Answer(answerId, answerText));
+        addAnswer(new Answer(answerId, answerText));
     }
 }

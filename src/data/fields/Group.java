@@ -1,5 +1,6 @@
 package data.fields;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import data.base.Field;
@@ -22,13 +23,12 @@ abstract public class Group extends Field
      */
     protected HashMap<String, Field> m_fields = new HashMap<String, Field>();
 
-    public Group(String id)
+    public Group(String id, ArrayList<Field> fields)
     {
         super(id);
-        setupFields();
+        for (Field field : fields)
+            addField(field);
     }
-
-    abstract protected void setupFields();
 
     public void addField(Field field)
     {

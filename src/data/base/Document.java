@@ -3,6 +3,8 @@ package data.base;
 import data.fields.Group;
 import data.fields.Text;
 
+import java.util.ArrayList;
+
 /**
  * base.Document class.
  *
@@ -22,39 +24,32 @@ import data.fields.Text;
 abstract public class Document extends Group
 {
     /**
-     * The document type.
-     */
-    private Text m_type;
-
-    /**
-     * The document name.
-     */
-    private Text m_name;
-
-    /**
      * Constructor.
      *
-     * @param id
+     * @param _id
      *   the document id
      *
-     * @param type
+     * @param _type
      *   the document type
      */
-    protected Document(String id, String type)
+    protected Document(String _id, String _type, ArrayList<Field> _fields)
     {
-        super(id);
-        m_type.setValue(type);
+        super(_id, _fields);
+
+        Text id = (Text) lookupField("id");
+        id.setValue(_id);
+
+        Text type = (Text) lookupField("type");
+        type.setValue(_type);
     }
 
-    protected void setupFields()
+    static protected ArrayList<Field> getFields()
     {
-        addField(new Text("id", getId()));
-
-        m_type = new Text("type");
-        addField(m_type);
-
-        m_name = new Text("name");
-        addField(m_name);
+        ArrayList<Field> ret = new ArrayList<Field>();
+        ret.add(new Text("id"));
+        ret.add(new Text("type"));
+        ret.add(new Text("name"));
+        return ret;
     }
 
     /**
@@ -65,12 +60,14 @@ abstract public class Document extends Group
      */
     public String getType()
     {
-        return m_type.getValue();
+        Text type = (Text) lookupField("type");
+        return type.getValue();
     }
 
-    public void setName(String name)
+    public void setName(String _name)
     {
-        m_name.setValue(name);
+        Text name = (Text) lookupField("name");
+        name.setValue(_name);
     }
 
 }

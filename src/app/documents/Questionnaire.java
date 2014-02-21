@@ -1,7 +1,11 @@
 package app.documents;
 
 import app.fields.Question;
+import data.base.Field;
 import data.fields.List;
+import data.fields.Text;
+
+import java.util.ArrayList;
 
 /**
  * documents.Questionnaire class.
@@ -22,15 +26,12 @@ public class Questionnaire extends data.base.Document
      */
     public Questionnaire(String id)
     {
-        super(id, "questionnaire");
+        super(id, "questionnaire", getFields());
     }
 
-    protected void setupFields()
+    static protected ArrayList<Field> getFields()
     {
-        super.setupFields();
-
-        questions = new List<Question>("questions");
-        addField(questions);
+        List<Question> questions = new List<Question>("questions");
 
         Question q1 = new Question("sex", "Are you a male or female?");
         q1.addAnswer("male", "Male");
@@ -48,6 +49,10 @@ public class Questionnaire extends data.base.Document
         q3.addAnswer("google", "Google");
         q3.addAnswer("yahoo", "yahoo");
         questions.add(q3);
+
+        ArrayList<Field> ret = data.base.Document.getFields();
+        ret.add(questions);
+        return ret;
     }
 
 }
