@@ -16,7 +16,11 @@ import java.util.ArrayList;
  */
 public class Questionnaire extends data.base.Document
 {
-    List<Question> questions;
+    static final String typeName = "questionnaire";
+
+    static {
+        data.Factory.registerField(Questionnaire.typeName, Questionnaire.class);
+    }
 
     /**
      * Constructor.
@@ -26,7 +30,7 @@ public class Questionnaire extends data.base.Document
      */
     public Questionnaire(String id)
     {
-        super(id, "questionnaire", getFields());
+        super(id, typeName, getFields());
     }
 
     static protected ArrayList<Field> getFields()
