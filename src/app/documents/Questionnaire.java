@@ -18,10 +18,6 @@ public class Questionnaire extends data.base.Document
 {
     static final String typeName = "questionnaire";
 
-    static {
-        data.Factory.registerField(Questionnaire.typeName, Questionnaire.class);
-    }
-
     /**
      * Constructor.
      *
@@ -32,7 +28,7 @@ public class Questionnaire extends data.base.Document
     {
         super(id, typeName, getFields());
     }
-
+    
     static protected ArrayList<Field> getFields()
     {
         List<Question> questions = new List<Question>("questions");

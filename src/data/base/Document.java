@@ -65,18 +65,6 @@ abstract public class Document extends Group
     }
 
     /**
-     * Returns document type.
-     *
-     * @return {string}
-     *   type of the document
-     */
-    public String getType()
-    {
-        Text type = lookupField("type");
-        return type.getValue();
-    }
-
-    /**
      * Sets the document name.
      *
      * @param _name
