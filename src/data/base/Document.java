@@ -64,6 +64,12 @@ abstract public class Document extends Group
         return name.getValue();
     }
 
+    public String getType()
+    {
+        Text type = this.lookupField("type");
+        return type.getValue();
+    }
+
     /**
      * Sets the document name.
      *
@@ -75,5 +81,4 @@ abstract public class Document extends Group
         Text name = lookupField("name");
         name.setValue(_name);
     }
-
 }
