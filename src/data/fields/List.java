@@ -39,4 +39,5 @@ public class List<E extends Field> extends Field
             field.toJSON(array);
         array.endArray();
     }
+
 }

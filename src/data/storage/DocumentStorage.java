@@ -41,7 +41,7 @@ public class DocumentStorage
     {
         for (Platform.Directory directory: Platform.Directory.values())
         {
-            File file = new File(Platform.getDirectoryPath(directory));
+            final File file = new File(Platform.getDirectoryPath(directory));
             if (!file.isDirectory())
                 file.mkdirs();
         }
@@ -51,8 +51,8 @@ public class DocumentStorage
     {
         prepareDirectories();
 
-        String documentPath = getDocumentFilePath(document);
-        File file = new File(documentPath);
+        final String documentPath = getDocumentFilePath(document);
+        final File file = new File(documentPath);
         try {
             file.createNewFile();
             String documentContents = data.Utils.serialiseField(document);
