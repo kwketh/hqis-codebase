@@ -8,19 +8,11 @@ import java.io.StringWriter;
 
 public class Utils
 {
-    public static String serialiseField(Field field)
+    public static String serialiseField(Field field) throws JSONException
     {
         StringWriter stringWriter = new StringWriter();
         JSONWriter jsonWriter = new JSONWriter(stringWriter);
-        try
-        {
-            field.toJSON(jsonWriter);
-        }
-        catch (JSONException e)
-        {
-            System.out.println("Error serialising field");
-            e.printStackTrace();
-        }
+        field.toJSON(jsonWriter);
         return stringWriter.toString();
     }
 }
