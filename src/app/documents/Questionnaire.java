@@ -3,7 +3,6 @@ package app.documents;
 import app.fields.Question;
 import data.base.Field;
 import data.fields.List;
-import data.fields.Text;
 
 import java.util.ArrayList;
 
@@ -28,28 +27,16 @@ public class Questionnaire extends data.base.Document
     {
         super(id, typeName, getFields());
     }
-    
+
+    public void addQuestion(Question question)
+    {
+        List<Question> questions = lookupField("questions");
+        questions.add(question);
+    }
+
     static protected ArrayList<Field> getFields()
     {
         List<Question> questions = new List<Question>("questions");
-
-        Question q1 = new Question("sex", "Are you a male or female?");
-        q1.addAnswer("male", "Male");
-        q1.addAnswer("female", "Female");
-        questions.add(q1);
-
-        Question q2 = new Question("age1630", "Are you aged between 16 and 30?");
-        q2.addAnswer("yes", "Yes");
-        q2.addAnswer("no", "No");
-        questions.add(q2);
-
-        Question q3 = new Question("prefferedEngine", "What is your preferred search engine?");
-        q3.addAnswer("altavista", "Altavista");
-        q3.addAnswer("dogpile", "Dogpile");
-        q3.addAnswer("google", "Google");
-        q3.addAnswer("yahoo", "yahoo");
-        questions.add(q3);
-
         ArrayList<Field> ret = data.base.Document.getFields();
         ret.add(questions);
         return ret;
