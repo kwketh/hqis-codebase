@@ -3,6 +3,8 @@ package data.base;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import java.util.Observable;
+
 /**
  * base.Field class.
  *
@@ -24,7 +26,7 @@ import org.json.JSONWriter;
  * compilation actually happens (most importantly
  * to ensure program correctness).
  */
-abstract public class Field
+abstract public class Field extends Observable
 {
     protected String m_id;
 

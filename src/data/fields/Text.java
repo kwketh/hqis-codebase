@@ -3,6 +3,8 @@ package data.fields;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import java.util.Observable;
+
 public class Text extends data.base.Field
 {
     String m_value;
@@ -27,6 +29,7 @@ public class Text extends data.base.Field
     public void setValue(String value)
     {
         m_value = value;
+        setChanged();
     }
 
     @Override
