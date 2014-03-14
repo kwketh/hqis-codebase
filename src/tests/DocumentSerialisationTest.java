@@ -5,8 +5,6 @@ import app.fields.Question;
 import data.loaders.DocumentLoader;
 import junit.framework.TestCase;
 
-import java.io.IOException;
-
 public class DocumentSerialisationTest extends TestCase
 {
     public void testQuestionnaireSerialisation()

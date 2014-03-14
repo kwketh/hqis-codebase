@@ -3,8 +3,6 @@ package tests;
 import app.documents.Questionnaire;
 import junit.framework.TestCase;
 
-import java.io.IOException;
-
 public class QuestionnaireTest extends TestCase
 {
     /**

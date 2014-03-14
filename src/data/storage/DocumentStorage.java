@@ -1,10 +1,7 @@
 package data.storage;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import core.Platform;
 import data.base.Document;
-import data.fields.Text;
 import data.loaders.DocumentLoader;
 
 import java.io.*;

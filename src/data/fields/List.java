@@ -1,15 +1,13 @@
 package data.fields;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonWriter;
+import data.base.Field;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Map;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
-import data.base.Field;
 
 /**
  * base.List class.
