@@ -3,6 +3,7 @@ package data.fields;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.google.gson.stream.JsonWriter;
 import data.base.Field;
@@ -22,7 +23,7 @@ abstract public class Group extends Field
     /**
      * List of fields the group contains.
      */
-    protected HashMap<String, Field> m_fields = new HashMap<String, Field>();
+    protected LinkedHashMap<String, Field> m_fields = new LinkedHashMap<String, Field>();
 
     public Group(String id, ArrayList<Field> fields)
     {
