@@ -55,9 +55,12 @@ public class DocumentStorage
         if (!file.exists())
             return null;
         String documentJson = null;
-        try {
+        try
+        {
             documentJson = new Scanner(file).useDelimiter("\\Z").next();
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             e.printStackTrace();
             return null;
         }
@@ -77,9 +80,7 @@ public class DocumentStorage
             if (document.getDate().after(existingDocument.getDate()))
                 requiresUpdate = true;
         } else
-        {
             requiresUpdate = true;
-        }
 
         if (requiresUpdate)
         {
@@ -105,12 +106,15 @@ public class DocumentStorage
 
     static private void saveDocumentRemotely(Document document)
     {
-        try {
+        try
+        {
             DocumentLoader loader = new DocumentLoader();
             String documentJson = data.Utils.serialiseField(document);
             loader.store(document.getId(), document.getType(), documentJson);
             System.out.println("Local document " + document.getId() + " has been stored remotely.");
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -160,22 +164,20 @@ public class DocumentStorage
         final File documentsFolder = new File(documentsPath);
         for (final File fileEntry : documentsFolder.listFiles())
         {
-            if (fileEntry.isFile())
-            {
-                String documentJson;
-                try {
-                    documentJson = new Scanner(fileEntry).useDelimiter("\\Z").next();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    continue;
-                }
+            if (!fileEntry.isFile())
+                return;
 
-                DocumentLoader loader = new DocumentLoader();
-                loader.loadFromJson(documentJson);
-
-                Document document = loader.constructDocument();
-                add(document);
+            String documentJson;
+            try {
+                documentJson = new Scanner(fileEntry).useDelimiter("\\Z").next();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                continue;
             }
+
+            DocumentLoader loader = new DocumentLoader();
+            loader.loadFromJson(documentJson);
+            add(loader.constructDocument());
         }
         System.out.println("Local documents (" + documentsFolder.listFiles().length + ") has been loaded.");
     }
