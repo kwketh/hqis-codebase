@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import data.base.Field;
 
@@ -30,6 +33,15 @@ abstract public class Group extends Field
         super(id);
         for (Field field : fields)
             addField(field);
+        setId(id);
+    }
+
+    public void setId(String id)
+    {
+        super.setId(id);
+        Text idField = lookupField("id");
+        if (idField != null)
+            idField.setValue(id);
     }
 
     public void addField(Field field)
@@ -42,7 +54,10 @@ abstract public class Group extends Field
 
     public<FieldType> FieldType lookupField(String id)
     {
-        return (FieldType)m_fields.get(id);
+        if (m_fields != null && m_fields.containsKey(id))
+            return (FieldType)m_fields.get(id);
+        else
+            return null;
     }
 
     @Override
@@ -54,5 +69,17 @@ abstract public class Group extends Field
             field.toJSON(object);
         }
         object.endObject();
+    }
+
+    @Override
+    public void fromJSON(JsonElement element) throws IOException
+    {
+        if (!element.isJsonObject())
+            throw new Error("Group failed to parse json element (element is not an Object)");
+        JsonObject object = element.getAsJsonObject();
+        for (Map.Entry<String,JsonElement> entry : object.entrySet()) {
+            Field field = lookupField(entry.getKey());
+            field.fromJSON(entry.getValue());
+        }
     }
 }

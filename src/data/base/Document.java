@@ -1,9 +1,12 @@
 package data.base;
 
+import data.fields.Date;
 import data.fields.Group;
 import data.fields.Text;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * base.Document class.
@@ -21,34 +24,39 @@ import java.util.ArrayList;
  * information such as meta data, the document
  * type as well as the actual fields.
  */
-abstract public class Document extends Group
+abstract public class Document extends Group implements Observer
 {
     /**
      * Constructor.
      *
-     * @param _id
+     * @param id
      *   the document id
      *
-     * @param _type
+     * @param type
      *   the document type
      */
-    protected Document(String _id, String _type, ArrayList<Field> _fields)
+    protected Document(String id, String type, ArrayList<Field> fields)
     {
-        super(_id, _fields);
+        super(id, fields);
 
-        Text id = lookupField("id");
-        id.setValue(_id);
+        Text typeField = lookupField("type");
+        typeField.setValue(type);
+    }
 
-        Text type = lookupField("type");
-        type.setValue(_type);
+    @Override
+    public void addField(Field field)
+    {
+        super.addField(field);
+        field.addObserver(this);
     }
 
     static protected ArrayList<Field> getFields()
     {
         ArrayList<Field> ret = new ArrayList<Field>();
-        ret.add(new Text("id"));
-        ret.add(new Text("type"));
-        ret.add(new Text("name"));
+        ret.add(data.Factory.makeField(Text.class, "id"));
+        ret.add(data.Factory.makeField(Text.class, "type"));
+        ret.add(data.Factory.makeField(Text.class, "name"));
+        ret.add(data.Factory.makeField(Date.class, "date"));
         return ret;
     }
 
@@ -73,12 +81,25 @@ abstract public class Document extends Group
     /**
      * Sets the document name.
      *
-     * @param _name
+     * @param name
      *   the new document name
      */
-    public void setName(String _name)
+    public void setName(String name)
     {
-        Text name = lookupField("name");
-        name.setValue(_name);
+        Text nameField = lookupField("name");
+        nameField.setValue(name);
+    }
+
+    public java.util.Date getDate()
+    {
+        Date dateField = lookupField("date");
+        return dateField.getValue();
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        Date dateField = lookupField("date");
+        dateField.setValue(new java.util.Date());
     }
 }

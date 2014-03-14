@@ -1,39 +1,37 @@
 package data.loaders;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import data.base.Document;
+
 import java.io.IOException;
 
 public class DocumentLoader
 {
-    final private String m_id;
-    final private String m_type;
     private JsonElement m_jsonObject = null;
 
-    public DocumentLoader(String id, String type)
+    public void loadFromJson(String json)
     {
-        m_id = id;
-        m_type = type;
+        JsonParser parser = new JsonParser();
+        JsonElement rootElement = parser.parse(json);
+        m_jsonObject = rootElement;
     }
 
-    public String getId()
+    public void loadFromRemote(String id, String type) throws IOException
     {
-        return m_id;
-    }
-
-    public String getType()
-    {
-        return m_type;
-    }
-
-    public void load() throws IOException
-    {
-        fabric.Response response = fabric.Connection.doGetRequest("doc/" + getType() + "/" + getId());
+        fabric.Response response = fabric.Connection.doGetRequest("doc/" + type + "/" + id);
         m_jsonObject = response.getJsonElement();
-        // todo: deserialise the json object into Document object
     }
 
-    public void store(String documentContents) throws IOException
+    public void store(String id, String type, String documentJson) throws IOException
     {
-        fabric.Connection.doPostRequest("doc/" + getType() + "/" + getId(), documentContents);
+        fabric.Connection.doPostRequest("doc/" + type + "/" + id, documentJson);
+    }
+
+    public <E extends Document> E constructDocument()
+    {
+        return data.Factory.constructDocument(m_jsonObject);
     }
 }

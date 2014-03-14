@@ -1,22 +1,24 @@
 package data.storage;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import core.Platform;
 import data.base.Document;
+import data.fields.Text;
 import data.loaders.DocumentLoader;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class DocumentStorage
 {
     static final ArrayList<Document> m_documents = new ArrayList<Document>();
 
-    static private String getDocumentFilePath(Document document)
+    static private String getDocumentFilePath(String documentId)
     {
-        return core.Platform.getFilePath(Platform.Directory.DIRECTORY_DOCUMENTS, document.getId() + ".json");
+        return core.Platform.getFilePath(Platform.Directory.DIRECTORY_DOCUMENTS, documentId + ".json");
     }
 
     static public void add(Document document)
@@ -46,49 +48,109 @@ public class DocumentStorage
         }
     }
 
+    static private Document getLocalDocument(String documentId)
+    {
+        final String documentPath = getDocumentFilePath(documentId);
+        final File file = new File(documentPath);
+        if (!file.exists())
+            return null;
+        String documentJson = null;
+        try {
+            documentJson = new Scanner(file).useDelimiter("\\Z").next();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        DocumentLoader loader = new DocumentLoader();
+        loader.loadFromJson(documentJson);
+        return loader.constructDocument();
+    }
+
     static private void saveDocumentLocally(Document document)
     {
         prepareDirectories();
+        boolean requiresUpdate = false;
 
-        final String documentPath = getDocumentFilePath(document);
-        final File file = new File(documentPath);
-        try
+        Document existingDocument = getLocalDocument(document.getId());
+        if (existingDocument != null)
         {
-            file.createNewFile();
-            String documentContents = data.Utils.serialiseField(document);
-            FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(), false);
-            BufferedWriter fileBuffer = new BufferedWriter(fileWriter);
-            fileBuffer.write(documentContents);
-            fileBuffer.close();
-            System.out.println("Local document saved in " + documentPath);
+            if (document.getDate().after(existingDocument.getDate()))
+                requiresUpdate = true;
+        } else
+        {
+            requiresUpdate = true;
         }
-        catch (IOException e)
+
+        if (requiresUpdate)
         {
-            System.out.println("Error saving document locally (serialisation or saving file failed)");
-            e.printStackTrace();
+            final String documentPath = getDocumentFilePath(document.getId());
+            final File file = new File(documentPath);
+            try
+            {
+                file.createNewFile();
+                String documentContents = data.Utils.serialiseField(document);
+                FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(), false);
+                BufferedWriter fileBuffer = new BufferedWriter(fileWriter);
+                fileBuffer.write(documentContents);
+                fileBuffer.close();
+                System.out.println("Document " + document.getId() + " has been saved locally.");
+            }
+            catch (IOException e)
+            {
+                System.out.println("Error saving document locally (serialisation or saving file failed)");
+                e.printStackTrace();
+            }
         }
     }
 
     static private void saveDocumentRemotely(Document document)
     {
         try {
-            DocumentLoader loader = new DocumentLoader(document.getId(), document.getType());
-            String documentContents = data.Utils.serialiseField(document);
-            loader.store(documentContents);
+            DocumentLoader loader = new DocumentLoader();
+            String documentJson = data.Utils.serialiseField(document);
+            loader.store(document.getId(), document.getType(), documentJson);
+            System.out.println("Local document " + document.getId() + " has been stored remotely.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    static ArrayList<Document> filterDocumentsByNewer(ArrayList<Document> documents)
+    {
+        final HashMap<String, Document> newerDocuments = new HashMap<String, Document>();
+        for (Document document : m_documents)
+        {
+            String documentId = document.getId();
+            java.util.Date lastModified = document.getDate();
+
+            boolean isNewer = false;
+            if (newerDocuments.containsKey(documentId)) {
+                Document otherDocument = newerDocuments.get(documentId);
+                if (lastModified.after(otherDocument.getDate())) {
+                    isNewer = true;
+                }
+            } else {
+                isNewer = true;
+            }
+
+            if (isNewer) {
+                newerDocuments.put(documentId, document);
+            }
+        }
+        return new ArrayList<Document>(newerDocuments.values());
+    }
+
     static void saveLocalStorage()
     {
-        for (Document document : m_documents)
+        ArrayList<Document> newerDocuments = filterDocumentsByNewer(m_documents);
+        for (Document document : newerDocuments)
             saveDocumentLocally(document);
     }
 
     static void saveRemoteStorage()
     {
-        for (Document document : m_documents)
+        ArrayList<Document> newerDocuments = filterDocumentsByNewer(m_documents);
+        for (Document document : newerDocuments)
             saveDocumentRemotely(document);
     }
 
@@ -100,9 +162,22 @@ public class DocumentStorage
         {
             if (fileEntry.isFile())
             {
-                // todo: read file and deserialise into Document object
+                String documentJson;
+                try {
+                    documentJson = new Scanner(fileEntry).useDelimiter("\\Z").next();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                DocumentLoader loader = new DocumentLoader();
+                loader.loadFromJson(documentJson);
+
+                Document document = loader.constructDocument();
+                add(document);
             }
         }
+        System.out.println("Local documents (" + documentsFolder.listFiles().length + ") has been loaded.");
     }
 
     static public void sync()
@@ -110,7 +185,12 @@ public class DocumentStorage
         /* Save (or update) all documents locally first */
         saveLocalStorage();
 
-        /* Then attempt syncing all documents on the remote server */
+        /* Then load all documents that may be missing in the storage */
+        loadLocalStorage();
+
+        /* Finally attempt syncing all documents on the remote server */
         saveRemoteStorage();
+
+        System.out.println("Documents have been synced.");
     }
 }

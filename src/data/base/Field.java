@@ -1,5 +1,6 @@
 package data.base;
 
+import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -30,15 +31,21 @@ abstract public class Field extends Observable
 {
     protected String m_id;
 
+    public Field() {}
+
     public Field(String id)
     {
+        setId(id);
+    }
+
+    public void setId(String id) {
         m_id = id;
     }
 
-    public String getId()
-    {
+    public String getId() {
         return m_id;
     }
 
     abstract public void toJSON(JsonWriter writer) throws IOException;
+    abstract public void fromJSON(JsonElement element) throws IOException;
 }

@@ -1,6 +1,10 @@
 package app.fields;
 
+import data.base.Field;
+import data.fields.Group;
 import data.fields.Text;
+
+import java.util.ArrayList;
 
 /**
  * fields.Answer class.
@@ -12,15 +16,32 @@ import data.fields.Text;
  * Currently the Answer class is just a Text field,
  * therefore representing the actual answer text.
  */
-class Answer extends Text
+public class Answer extends Group
 {
-    Answer(String id)
+    public Answer(String _id)
     {
-        super(id);
+        super(_id, getFields());
+        setAnswerId(_id);
     }
 
-    Answer(String id, String answerText)
+    void setAnswerId(String id)
     {
-        super(id, answerText);
+        Text answerText = lookupField("id");
+        answerText.setValue(id);
     }
+
+    void setAnswerText(String text)
+    {
+        Text answerText = lookupField("answerText");
+        answerText.setValue(text);
+    }
+
+    protected static ArrayList<Field> getFields()
+    {
+        ArrayList<Field> ret = new ArrayList<Field>();
+        ret.add(data.Factory.makeField(Text.class, "id"));
+        ret.add(data.Factory.makeField(Text.class, "answerText"));
+        return ret;
+    }
+
 }

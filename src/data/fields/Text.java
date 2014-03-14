@@ -1,5 +1,6 @@
 package data.fields;
 
+import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -7,18 +8,16 @@ import java.util.Observable;
 
 public class Text extends data.base.Field
 {
-    String m_value;
+    String m_value = null;
+
+    public Text()
+    {
+        super();
+    }
 
     public Text(String id)
     {
         super(id);
-        m_value = null;
-    }
-
-    public Text(String id, String value)
-    {
-        super(id);
-        m_value = value;
     }
 
     public String getValue()
@@ -30,6 +29,7 @@ public class Text extends data.base.Field
     {
         m_value = value;
         setChanged();
+        notifyObservers();
     }
 
     @Override
@@ -41,5 +41,13 @@ public class Text extends data.base.Field
             writer.nullValue();
             throw new Error("Text value must be an instance of String");
         }
+    }
+
+    @Override
+    public void fromJSON(JsonElement element) throws IOException
+    {
+       if (!element.isJsonPrimitive())
+           throw new Error("Text json parsing failed (element is not a primitive type)");
+       setValue(element.getAsString());
     }
 }

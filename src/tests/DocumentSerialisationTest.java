@@ -2,15 +2,16 @@ package tests;
 
 import app.documents.Questionnaire;
 import app.fields.Question;
+import data.loaders.DocumentLoader;
 import junit.framework.TestCase;
 
-public class DocumentStorageTest extends TestCase
-{
-    public void testDocumentStorageSync()
-    {
-        /* Create basic questionnaire */
+import java.io.IOException;
 
-        Questionnaire questionnaire = new Questionnaire("basic");
+public class DocumentSerialisationTest extends TestCase
+{
+    public void testQuestionnaireSerialisation()
+    {
+        Questionnaire questionnaire = new Questionnaire("basicquestionnaire");
         questionnaire.setName("Basic questionnaire");
 
         Question q1 = new Question("sex", "Are you a male or female?");
@@ -30,10 +31,15 @@ public class DocumentStorageTest extends TestCase
         q3.addAnswer("yahoo", "yahoo");
         questionnaire.addQuestion(q3);
 
-        /* Add the questionnaire document to the document storage */
-        data.storage.DocumentStorage.add(questionnaire);
+        String json = data.Utils.serialiseField(questionnaire);
 
-        /* Sync the document storage both locally and remotely */
-        data.storage.DocumentStorage.sync();
+        DocumentLoader loader = new DocumentLoader();
+        loader.loadFromJson(json);
+
+        Questionnaire questionnaireCopy = loader.constructDocument();
+
+        String jsonCopy = data.Utils.serialiseField(questionnaireCopy);
+
+        assertEquals("deserialising and serialising gives exact same json", json, jsonCopy);
     }
 }

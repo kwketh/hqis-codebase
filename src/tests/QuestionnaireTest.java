@@ -15,13 +15,7 @@ public class QuestionnaireTest extends TestCase
         Questionnaire questionnaire = new Questionnaire("sample1");
         questionnaire.setName("A sample questionnaire");
 
-        String json = null;
-        try {
-            json = data.Utils.serialiseField(questionnaire);
-        } catch (IOException e) {
-            System.out.println("Error serialising field");
-            e.printStackTrace();
-        }
+        String json = data.Utils.serialiseField(questionnaire);
 
         assertEquals(questionnaire.getId(), "sample1");
         assertEquals(questionnaire.getName(), "A sample questionnaire");

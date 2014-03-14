@@ -7,11 +7,15 @@ import java.io.*;
 
 public class Utils
 {
-    public static String serialiseField(Field field) throws IOException
+    public static String serialiseField(Field field)
     {
         StringWriter writer = new StringWriter();
         JsonWriter jsonWriter = new JsonWriter(writer);
-        field.toJSON(jsonWriter);
+        try {
+            field.toJSON(jsonWriter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return writer.toString();
     }
 }

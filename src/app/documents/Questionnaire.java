@@ -5,6 +5,7 @@ import data.base.Field;
 import data.fields.List;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  * documents.Questionnaire class.
@@ -36,10 +37,9 @@ public class Questionnaire extends data.base.Document
 
     static protected ArrayList<Field> getFields()
     {
-        List<Question> questions = new List<Question>("questions");
+        List<Question> questions = new List<Question>("questions", Question.class);
         ArrayList<Field> ret = data.base.Document.getFields();
         ret.add(questions);
         return ret;
     }
-
 }
