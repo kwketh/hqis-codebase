@@ -1,8 +1,8 @@
 package data.base;
 
-import org.json.JSONException;
-import org.json.JSONWriter;
+import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
 import java.util.Observable;
 
 /**
@@ -40,5 +40,5 @@ abstract public class Field extends Observable
         return m_id;
     }
 
-    abstract public void toJSON(JSONWriter writer) throws JSONException;
+    abstract public void toJSON(JsonWriter writer) throws IOException;
 }

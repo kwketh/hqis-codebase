@@ -2,7 +2,8 @@ package tests;
 
 import app.documents.Questionnaire;
 import junit.framework.TestCase;
-import org.json.JSONException;
+
+import java.io.IOException;
 
 public class QuestionnaireTest extends TestCase
 {
@@ -17,7 +18,7 @@ public class QuestionnaireTest extends TestCase
         String json = null;
         try {
             json = data.Utils.serialiseField(questionnaire);
-        } catch (JSONException e) {
+        } catch (IOException e) {
             System.out.println("Error serialising field");
             e.printStackTrace();
         }

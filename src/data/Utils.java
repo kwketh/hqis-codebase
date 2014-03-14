@@ -1,18 +1,17 @@
 package data;
 
+import com.google.gson.stream.JsonWriter;
 import data.base.Field;
-import org.json.JSONException;
-import org.json.JSONWriter;
 
-import java.io.StringWriter;
+import java.io.*;
 
 public class Utils
 {
-    public static String serialiseField(Field field) throws JSONException
+    public static String serialiseField(Field field) throws IOException
     {
-        StringWriter stringWriter = new StringWriter();
-        JSONWriter jsonWriter = new JSONWriter(stringWriter);
+        StringWriter writer = new StringWriter();
+        JsonWriter jsonWriter = new JsonWriter(writer);
         field.toJSON(jsonWriter);
-        return stringWriter.toString();
+        return writer.toString();
     }
 }

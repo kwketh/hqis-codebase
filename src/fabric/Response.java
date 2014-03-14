@@ -1,7 +1,9 @@
 package fabric;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import java.io.IOException;
 
 public class Response
 {
@@ -24,9 +26,10 @@ public class Response
         return m_responseText;
     }
 
-    public JSONObject getJsonObject() throws JSONException
+    public JsonElement getJsonElement() throws IOException
     {
-        JSONObject jsonObject = new JSONObject(m_responseText);
-        return jsonObject;
+        JsonParser parser = new JsonParser();
+        JsonElement rootElement = parser.parse(m_responseText);
+        return rootElement;
     }
 }

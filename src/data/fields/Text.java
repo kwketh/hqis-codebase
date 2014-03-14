@@ -1,8 +1,8 @@
 package data.fields;
 
-import org.json.JSONException;
-import org.json.JSONWriter;
+import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
 import java.util.Observable;
 
 public class Text extends data.base.Field
@@ -33,10 +33,13 @@ public class Text extends data.base.Field
     }
 
     @Override
-    public void toJSON(JSONWriter writer) throws JSONException
+    public void toJSON(JsonWriter writer) throws IOException
     {
-        if (m_value != null && !(m_value instanceof String))
+        if (m_value != null && (m_value instanceof String))
+            writer.value(m_value);
+        else {
+            writer.nullValue();
             throw new Error("Text value must be an instance of String");
-        writer.value(m_value);
+        }
     }
 }

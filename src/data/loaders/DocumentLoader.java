@@ -1,15 +1,13 @@
 package data.loaders;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.google.gson.JsonElement;
 import java.io.IOException;
 
 public class DocumentLoader
 {
     final private String m_id;
     final private String m_type;
-    private JSONObject m_jsonObject = null;
+    private JsonElement m_jsonObject = null;
 
     public DocumentLoader(String id, String type)
     {
@@ -27,10 +25,10 @@ public class DocumentLoader
         return m_type;
     }
 
-    public void load() throws IOException, JSONException
+    public void load() throws IOException
     {
         fabric.Response response = fabric.Connection.doGetRequest("doc/" + getType() + "/" + getId());
-        m_jsonObject = response.getJsonObject();
+        m_jsonObject = response.getJsonElement();
         // todo: deserialise the json object into Document object
     }
 

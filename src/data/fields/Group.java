@@ -1,10 +1,11 @@
 package data.fields;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.gson.stream.JsonWriter;
 import data.base.Field;
-import org.json.*;
 
 /**
  * base.Group class.
@@ -44,11 +45,11 @@ abstract public class Group extends Field
     }
 
     @Override
-    public void toJSON(JSONWriter writer) throws JSONException
+    public void toJSON(JsonWriter writer) throws IOException
     {
-        JSONWriter object = writer.object();
+        JsonWriter object = writer.beginObject();
         for (Field field : m_fields.values()) {
-            object.key(field.getId());
+            object.name(field.getId());
             field.toJSON(object);
         }
         object.endObject();

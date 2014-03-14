@@ -3,7 +3,6 @@ package data.storage;
 import core.Platform;
 import data.base.Document;
 import data.loaders.DocumentLoader;
-import org.json.JSONException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,7 +52,8 @@ public class DocumentStorage
 
         final String documentPath = getDocumentFilePath(document);
         final File file = new File(documentPath);
-        try {
+        try
+        {
             file.createNewFile();
             String documentContents = data.Utils.serialiseField(document);
             FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(), false);
@@ -61,13 +61,10 @@ public class DocumentStorage
             fileBuffer.write(documentContents);
             fileBuffer.close();
             System.out.println("Local document saved in " + documentPath);
-        } catch (JSONException e)
+        }
+        catch (IOException e)
         {
-            System.out.println("Error saving document locally (serialisation failed)");
-            e.printStackTrace();
-        } catch (IOException e)
-        {
-            System.out.println("Error saving document locally (saving file failed)");
+            System.out.println("Error saving document locally (serialisation or saving file failed)");
             e.printStackTrace();
         }
     }
@@ -79,8 +76,6 @@ public class DocumentStorage
             String documentContents = data.Utils.serialiseField(document);
             loader.store(documentContents);
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

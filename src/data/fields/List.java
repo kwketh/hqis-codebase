@@ -1,9 +1,10 @@
 package data.fields;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.gson.stream.JsonWriter;
 import data.base.Field;
-import org.json.*;
 
 /**
  * base.List class.
@@ -32,9 +33,9 @@ public class List<E extends Field> extends Field
     }
 
     @Override
-    public void toJSON(JSONWriter writer) throws JSONException
+    public void toJSON(JsonWriter writer) throws IOException
     {
-        JSONWriter array = writer.array();
+        JsonWriter array = writer.beginArray();
         for (Field field : m_fields)
             field.toJSON(array);
         array.endArray();
