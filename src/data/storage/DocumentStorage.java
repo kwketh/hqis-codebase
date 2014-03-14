@@ -85,14 +85,37 @@ public class DocumentStorage
         }
     }
 
+    static void saveLocalStorage()
+    {
+        for (Document document : m_documents)
+            saveDocumentLocally(document);
+    }
+
+    static void saveRemoteStorage()
+    {
+        for (Document document : m_documents)
+            saveDocumentRemotely(document);
+    }
+
+    static void loadLocalStorage()
+    {
+        final String documentsPath = Platform.getDirectoryPath(Platform.Directory.DIRECTORY_DOCUMENTS);
+        final File documentsFolder = new File(documentsPath);
+        for (final File fileEntry : documentsFolder.listFiles())
+        {
+            if (fileEntry.isFile())
+            {
+                // todo: read file and deserialise into Document object
+            }
+        }
+    }
+
     static public void sync()
     {
         /* Save (or update) all documents locally first */
-        for (Document document : m_documents)
-            saveDocumentLocally(document);
+        saveLocalStorage();
 
         /* Then attempt syncing all documents on the remote server */
-        for (Document document : m_documents)
-            saveDocumentRemotely(document);
+        saveRemoteStorage();
     }
 }
