@@ -2,6 +2,7 @@ package data.storage;
 
 import core.Platform;
 import data.base.Document;
+import data.loaders.DocumentListLoader;
 import data.loaders.DocumentLoader;
 
 import java.io.*;
@@ -45,7 +46,18 @@ public class DocumentStorage
         }
     }
 
-    static private Document getLocalDocument(String documentId)
+    static private Document getDocumentById(String documentId)
+    {
+        for (Document document : m_documents)
+        {
+            String iterDocumentId = document.getId();
+            if (documentId == iterDocumentId)
+                return document;
+        }
+        return null;
+    }
+
+    static private Document getLocalDocumentById(String documentId)
     {
         final String documentPath = getDocumentFilePath(documentId);
         final File file = new File(documentPath);
@@ -71,7 +83,7 @@ public class DocumentStorage
         prepareDirectories();
         boolean requiresUpdate = false;
 
-        Document existingDocument = getLocalDocument(document.getId());
+        Document existingDocument = getLocalDocumentById(document.getId());
         if (existingDocument != null)
         {
             if (document.getDate().after(existingDocument.getDate()))
@@ -114,6 +126,18 @@ public class DocumentStorage
         {
             e.printStackTrace();
         }
+    }
+
+    static ArrayList<Document> filterDocumentsByType(ArrayList<Document> documents, String documentType)
+    {
+        ArrayList<Document> filteredDocuments = new ArrayList<Document>();
+        for (Document document : m_documents)
+        {
+            String iterType = document.getType();
+            if (documentType == iterType)
+                filteredDocuments.add(document);
+        }
+        return filteredDocuments;
     }
 
     static ArrayList<Document> filterDocumentsByNewer(ArrayList<Document> documents)
@@ -179,6 +203,34 @@ public class DocumentStorage
         System.out.println("Local documents (" + documentsFolder.listFiles().length + ") has been loaded.");
     }
 
+    public static void loadRemoteStorage(String documentType)
+    {
+        DocumentListLoader loader = new DocumentListLoader();
+        try {
+            loader.loadFromRemote(documentType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<Document> documents = null;
+        try {
+            documents = loader.constructDocuments();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (Document document : documents)
+            add(document);
+    }
+
+    public static ArrayList<Document> getDocuments()
+    {
+        return filterDocumentsByNewer(m_documents);
+    }
+
+    public static ArrayList<Document> getDocumentsByType(String type)
+    {
+        return filterDocumentsByNewer(filterDocumentsByType(m_documents, type));
+    }
+
     static public void sync()
     {
         /* Save (or update) all documents locally first */
@@ -187,7 +239,7 @@ public class DocumentStorage
         /* Then load all documents that may be missing in the storage */
         loadLocalStorage();
 
-        /* Finally attempt syncing all documents on the remote server */
+        /* Attempt syncing all documents on the remote server */
         saveRemoteStorage();
 
         System.out.println("Documents have been synced.");
