@@ -1,5 +1,7 @@
 package tests;
 
+import java.io.IOException;
+
 import app.documents.Questionnaire;
 import app.fields.Question;
 import junit.framework.TestCase;
@@ -34,6 +36,10 @@ public class DocumentStorageTest extends TestCase
         data.storage.DocumentStorage.add(questionnaire);
 
         /* Sync the document storage both locally and remotely */
-        data.storage.DocumentStorage.syncAll();
+        try {
+			data.storage.DocumentStorage.syncAll();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }
