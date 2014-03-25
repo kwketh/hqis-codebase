@@ -4,11 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import data.base.Field;
+import data.delegates.GroupDelegate;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Observer;
 
 /**
  * base.Group class.
@@ -20,12 +22,31 @@ import java.util.Map;
  * serialise and un-serialise the fields values
  * including their ids.
  */
-abstract public class Group extends Field
+abstract public class Group extends Field implements Observer
 {
     /**
      * List of fields the group contains.
      */
     protected LinkedHashMap<String, Field> m_fields = new LinkedHashMap<String, Field>();
+    protected GroupDelegate m_delegate = new GroupDelegate() {
+        @Override
+        public void onGroupFieldAdded(Field field) {
+            setChanged();
+            notifyObservers("onGroupFieldAdded");
+        }
+
+        @Override
+        public void onGroupFieldRemoved(Field field) {
+            setChanged();
+            notifyObservers("onGroupFieldRemoved");
+        }
+
+        @Override
+        public void onGroupFieldModified(String eventName, Field field) {
+            setChanged();
+            notifyObservers("onGroupFieldModified");
+        }
+    };
 
     public Group(String id, ArrayList<Field> fields)
     {
@@ -33,6 +54,11 @@ abstract public class Group extends Field
         for (Field field : fields)
             addField(field);
         setId(id);
+    }
+
+    public void setDelegate(GroupDelegate delegate)
+    {
+        m_delegate = delegate;
     }
 
     public void setId(String id)
@@ -49,6 +75,10 @@ abstract public class Group extends Field
             throw new Error("data.fields.Group cannot have two fields with same id");
 
         m_fields.put(field.getId(), field);
+        field.addObserver(this);
+
+        if (m_delegate != null)
+            m_delegate.onGroupFieldAdded(field);
     }
 
     public<FieldType> FieldType lookupField(String id)
@@ -79,6 +109,18 @@ abstract public class Group extends Field
         for (Map.Entry<String,JsonElement> entry : object.entrySet()) {
             Field field = lookupField(entry.getKey());
             field.fromJSON(entry.getValue());
+        }
+    }
+
+    @Override
+    public void update(java.util.Observable sender, Object argument)
+    {
+        if (sender instanceof Field && argument instanceof String)
+        {
+            Field field = (Field)sender;
+            String eventName = (String)argument;
+            if (m_delegate != null)
+                m_delegate.onGroupFieldModified(eventName, field);
         }
     }
 }

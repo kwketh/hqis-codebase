@@ -31,7 +31,10 @@ abstract public class Field extends Observable
 {
     protected String m_id;
 
-    public Field() {}
+    public Field()
+    {
+        this(data.Utils.newId());
+    }
 
     public Field(String id)
     {

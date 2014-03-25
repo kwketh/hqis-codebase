@@ -4,10 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
 import data.base.Field;
+import data.delegates.ListDelegate;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * base.List class.
@@ -18,13 +21,15 @@ import java.util.ArrayList;
  * Group class responsibility is to be able to
  * serialise and un-serialise all fields values.
  */
-public class List<E extends Field> extends Field
+
+public class List<E extends Field> extends Field implements Observer
 {
     /**
      * List of fields the group contains.
      */
     protected ArrayList<E> m_fields = new ArrayList<E>();
     protected Class<E> m_itemClass = null;
+    protected ListDelegate m_delegate = null;
 
     public List(String id, Class<E> itemClass)
     {
@@ -32,9 +37,31 @@ public class List<E extends Field> extends Field
         m_itemClass = itemClass;
     }
 
+    public void setDelegate(ListDelegate delegate)
+    {
+        m_delegate = delegate;
+    }
+
     public void add(E field)
     {
         m_fields.add(field);
+        field.addObserver(this);
+        if (m_delegate != null)
+            m_delegate.onListItemAdded(field);
+    }
+
+    public void remove(E field)
+    {
+        m_fields.remove(field);
+        field.deleteObserver(this);
+
+        if (m_delegate != null)
+            m_delegate.onListItemRemoved(field);
+    }
+
+    public ArrayList<E> values()
+    {
+        return m_fields;
     }
 
     @Override
@@ -71,6 +98,18 @@ public class List<E extends Field> extends Field
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void update(Observable sender, Object argument)
+    {
+        if (sender instanceof Field && argument instanceof String)
+        {
+            Field field = (Field)sender;
+            String eventName = (String)argument;
+            if (m_delegate != null)
+                m_delegate.onListAnyItemModified(eventName, field);
         }
     }
 }

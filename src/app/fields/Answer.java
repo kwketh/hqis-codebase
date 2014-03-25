@@ -18,6 +18,11 @@ import java.util.ArrayList;
  */
 public class Answer extends Group
 {
+    public Answer()
+    {
+        this(data.Utils.newId());
+    }
+
     public Answer(String _id)
     {
         super(_id, getFields());
@@ -28,12 +33,24 @@ public class Answer extends Group
     {
         Text answerText = lookupField("id");
         answerText.setValue(id);
+
+        setChanged();
+        notifyObservers();
     }
 
-    void setAnswerText(String text)
+    public void setAnswerText(String text)
     {
         Text answerText = lookupField("answerText");
         answerText.setValue(text);
+
+        setChanged();
+        notifyObservers();
+    }
+
+    public String getAnswerText()
+    {
+        Text answerText = lookupField("answerText");
+        return answerText.getValue();
     }
 
     protected static ArrayList<Field> getFields()
@@ -44,4 +61,8 @@ public class Answer extends Group
         return ret;
     }
 
+    public String toString()
+    {
+        return getAnswerText();
+    }
 }

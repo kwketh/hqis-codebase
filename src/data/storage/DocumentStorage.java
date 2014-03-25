@@ -2,6 +2,9 @@ package data.storage;
 
 import core.Platform;
 import data.base.Document;
+import data.base.Field;
+import data.delegates.DocumentDelegate;
+import data.delegates.DocumentStorageDelegate;
 import data.loaders.DocumentListLoader;
 import data.loaders.DocumentLoader;
 
@@ -13,6 +16,19 @@ import java.util.Scanner;
 public class DocumentStorage
 {
     static final ArrayList<Document> m_documents = new ArrayList<Document>();
+    static DocumentStorageDelegate m_delegate;
+    static DocumentDelegate m_documentDelegate = new DocumentDelegate() {
+        @Override
+        public void onDocumentFieldModified(Document document, Field field) {
+            if (DocumentStorage.m_delegate != null)
+                DocumentStorage.m_delegate.onStorageDocumentModified(document);
+        }
+    };
+
+    static public void setDelegate(DocumentStorageDelegate delegate)
+    {
+        m_delegate = delegate;
+    }
 
     static private String getDocumentFilePath(String documentId)
     {
@@ -25,7 +41,12 @@ public class DocumentStorage
             return;
 
         m_documents.add(document);
+        document.setDelegate(m_documentDelegate);
+
         saveDocumentLocally(document);
+
+        if (m_delegate != null)
+            m_delegate.onStorageDocumentAdded(document);
     }
 
     static public void remove(Document document)
@@ -34,6 +55,9 @@ public class DocumentStorage
             return;
 
         m_documents.remove(document);
+
+        if (m_delegate != null)
+            m_delegate.onStorageDocumentRemoved(document);
     }
 
     static private void prepareDirectories()
@@ -51,7 +75,7 @@ public class DocumentStorage
         for (Document document : m_documents)
         {
             String iterDocumentId = document.getId();
-            if (documentId == iterDocumentId)
+            if (documentId.equals(iterDocumentId))
                 return document;
         }
         return null;
@@ -131,19 +155,31 @@ public class DocumentStorage
     static ArrayList<Document> filterDocumentsByType(ArrayList<Document> documents, String documentType)
     {
         ArrayList<Document> filteredDocuments = new ArrayList<Document>();
-        for (Document document : m_documents)
+        for (Document document : documents)
         {
             String iterType = document.getType();
-            if (documentType == iterType)
+            if (documentType.equals(iterType))
                 filteredDocuments.add(document);
         }
         return filteredDocuments;
     }
 
+
+    static ArrayList<Document> filterDocumentsNonArchived(ArrayList<Document> documents)
+    {
+        final ArrayList<Document> nonArchivedDocuments = new ArrayList<Document>();
+        for (Document document : documents)
+        {
+            if (!document.isArchived())
+                nonArchivedDocuments.add(document);
+        }
+        return nonArchivedDocuments;
+    }
+
     static ArrayList<Document> filterDocumentsByNewer(ArrayList<Document> documents)
     {
         final HashMap<String, Document> newerDocuments = new HashMap<String, Document>();
-        for (Document document : m_documents)
+        for (Document document : documents)
         {
             String documentId = document.getId();
             java.util.Date lastModified = document.getDate();
@@ -179,7 +215,7 @@ public class DocumentStorage
             saveDocumentRemotely(document);
     }
 
-    static void loadLocalStorage()
+    public static void loadLocalStorage()
     {
         final String documentsPath = Platform.getDirectoryPath(Platform.Directory.DIRECTORY_DOCUMENTS);
         final File documentsFolder = new File(documentsPath);
@@ -223,15 +259,15 @@ public class DocumentStorage
 
     public static ArrayList<Document> getDocuments()
     {
-        return filterDocumentsByNewer(m_documents);
+        return filterDocumentsNonArchived(filterDocumentsByNewer(m_documents));
     }
 
-    public static ArrayList<Document> getDocumentsByType(String type)
+    public static <E> ArrayList<Document> getDocumentsByType(String type)
     {
-        return filterDocumentsByNewer(filterDocumentsByType(m_documents, type));
+        return filterDocumentsNonArchived(filterDocumentsByNewer(filterDocumentsByType(m_documents, type)));
     }
 
-    static public void sync()
+    static public void syncAll()
     {
         /* Save (or update) all documents locally first */
         saveLocalStorage();
@@ -244,4 +280,11 @@ public class DocumentStorage
 
         System.out.println("Documents have been synced.");
     }
+
+    static public void syncDocument(Document document)
+    {
+        saveDocumentLocally(document);
+        saveDocumentRemotely(document);
+    }
+
 }

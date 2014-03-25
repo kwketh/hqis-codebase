@@ -21,6 +21,11 @@ import java.util.ArrayList;
  */
 public class Question extends Group
 {
+    public Question()
+    {
+        this(data.Utils.newId());
+    }
+
     public Question(String id)
     {
         super(id, getFields());
@@ -34,8 +39,17 @@ public class Question extends Group
 
     public void setQuestionText(String questionText)
     {
-        Text questionField = lookupField("question");
-        questionField.setValue(questionText);
+        Text questionTextField = lookupField("question");
+        questionTextField.setValue(questionText);
+
+        setChanged();
+        notifyObservers();
+    }
+
+    public String getQuestionText()
+    {
+        Text questionTextField = lookupField("question");
+        return questionTextField.getValue();
     }
 
     protected static ArrayList<Field> getFields()
@@ -58,5 +72,13 @@ public class Question extends Group
         Answer answer = new Answer(answerId);
         answer.setAnswerText(answerText);
         addAnswer(answer);
+    }
+
+    public String toString()
+    {
+        if (getQuestionText() == null || getQuestionText().isEmpty())
+            return " ";
+        else
+            return getQuestionText();
     }
 }

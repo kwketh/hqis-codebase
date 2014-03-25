@@ -20,6 +20,14 @@ public class Questionnaire extends data.base.Document
 
     /**
      * Constructor.
+     */
+    public Questionnaire()
+    {
+        this(data.Utils.newId());
+    }
+
+    /**
+     * Constructor.
      *
      * @param id
      *   the questionnaire id
@@ -41,5 +49,13 @@ public class Questionnaire extends data.base.Document
         ArrayList<Field> ret = data.base.Document.getFields();
         ret.add(questions);
         return ret;
+    }
+
+    public String toString()
+    {
+        if (getName() == null || getName().isEmpty())
+            return "Untitled questionnaire (last modified " + getDate() + ")";
+        else
+            return getName() + " (last modified " + getDate() + ")";
     }
 }

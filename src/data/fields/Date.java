@@ -37,7 +37,6 @@ public class Date extends data.base.Field
     public void setValue(java.util.Date value)
     {
         m_date = value;
-        setChanged();
     }
 
     @Override

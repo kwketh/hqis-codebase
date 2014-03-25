@@ -1,8 +1,10 @@
 package data.base;
 
+import data.delegates.DocumentDelegate;
 import data.fields.Date;
 import data.fields.Group;
 import data.fields.Text;
+import data.fields.Boolean;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -24,8 +26,11 @@ import java.util.Observer;
  * information such as meta data, the document
  * type as well as the actual fields.
  */
+
 abstract public class Document extends Group implements Observer
 {
+    private DocumentDelegate m_delegate;
+
     /**
      * Constructor.
      *
@@ -41,6 +46,26 @@ abstract public class Document extends Group implements Observer
 
         Text typeField = lookupField("type");
         typeField.setValue(type);
+
+        Boolean archivedField = lookupField("archived");
+        archivedField.setValue(false);
+    }
+
+    public void setDelegate(DocumentDelegate delegate)
+    {
+        m_delegate = delegate;
+    }
+
+    public java.lang.Boolean isArchived()
+    {
+        Boolean archivedField = lookupField("archived");
+        return archivedField.getValue() == true;
+    }
+
+    public void setArchived(java.lang.Boolean value)
+    {
+        Boolean archivedField = lookupField("archived");
+        archivedField.setValue(value);
     }
 
     @Override
@@ -57,6 +82,7 @@ abstract public class Document extends Group implements Observer
         ret.add(data.Factory.makeField(Text.class, "type"));
         ret.add(data.Factory.makeField(Text.class, "name"));
         ret.add(data.Factory.makeField(Date.class, "date"));
+        ret.add(data.Factory.makeField(Boolean.class, "archived"));
         return ret;
     }
 
@@ -97,9 +123,25 @@ abstract public class Document extends Group implements Observer
     }
 
     @Override
-    public void update(Observable o, Object arg)
+    public void update(Observable sender, Object argument)
     {
-        Date dateField = lookupField("date");
-        dateField.setValue(new java.util.Date());
+        if (sender instanceof Field)
+        {
+            Field field = (Field)sender;
+            if (m_delegate != null)
+                m_delegate.onDocumentFieldModified(this, field);
+
+            /* Update document date */
+            Date dateField = lookupField("date");
+            dateField.setValue(new java.util.Date());
+        }
+    }
+
+    public String toString()
+    {
+        if (getName() == null || getName().isEmpty())
+            return "Untitled document (last modified \" + getDate() + \")";
+        else
+            return getName() + " (last modified " + getDate() + ")";
     }
 }

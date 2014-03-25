@@ -34,6 +34,6 @@ public class DocumentStorageTest extends TestCase
         data.storage.DocumentStorage.add(questionnaire);
 
         /* Sync the document storage both locally and remotely */
-        data.storage.DocumentStorage.sync();
+        data.storage.DocumentStorage.syncAll();
     }
 }

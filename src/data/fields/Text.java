@@ -28,7 +28,7 @@ public class Text extends data.base.Field
     {
         m_value = value;
         setChanged();
-        notifyObservers();
+        notifyObservers("onTextModified");
     }
 
     @Override
@@ -38,15 +38,15 @@ public class Text extends data.base.Field
             writer.value(m_value);
         else {
             writer.nullValue();
-            throw new Error("Text value must be an instance of String");
         }
     }
 
     @Override
     public void fromJSON(JsonElement element) throws IOException
     {
-       if (!element.isJsonPrimitive())
-           throw new Error("Text json parsing failed (element is not a primitive type)");
-       setValue(element.getAsString());
+        if (element.isJsonPrimitive())
+            m_value = element.getAsString();
+        else
+            m_value = null;
     }
 }
