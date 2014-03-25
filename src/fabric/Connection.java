@@ -18,19 +18,34 @@ import java.io.IOException;
 
 public class Connection
 {
-    static private final String baseUrl = "http://ec2-54-229-223-2.eu-west-1.compute.amazonaws.com/";
+    static private String m_baseUrl = "http://ec2-54-229-223-2.eu-west-1.compute.amazonaws.com/";
+
+    static public String getGatewayUrl()
+    {
+        String baseUrl = m_baseUrl;
+        if (baseUrl.indexOf("http://") != 0 && baseUrl.indexOf("https://") != 0)
+            baseUrl = "http://" + baseUrl;
+        if (baseUrl.charAt(baseUrl.length() - 1) != '/')
+            baseUrl = baseUrl + "/";
+        return baseUrl;
+    }
+
+    static public void setGatewayUrl(String baseUrl)
+    {
+        m_baseUrl = baseUrl;
+    }
 
     static public Response doPostRequest(String remoteLocation, String postData) throws IOException
     {
         StringEntity requestEntity = new StringEntity(postData, ContentType.create("plain/text", Consts.UTF_8));
-        HttpPost request = new HttpPost(baseUrl + remoteLocation);
+        HttpPost request = new HttpPost(getGatewayUrl() + remoteLocation);
         request.setEntity(requestEntity);
         return doRequest(request);
     }
 
     static public Response doGetRequest(String remoteLocation) throws IOException
     {
-        HttpGet request = new HttpGet(baseUrl + remoteLocation);
+        HttpGet request = new HttpGet(getGatewayUrl() + remoteLocation);
         return doRequest(request);
     }
 
