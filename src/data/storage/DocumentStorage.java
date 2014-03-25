@@ -137,21 +137,15 @@ public class DocumentStorage
         }
     }
 
-    static private void saveDocumentRemotely(Document document)
+    static private void saveDocumentRemotely(Document document) throws IOException
     {
         if (document.isArchived())
             return;
-        try
-        {
-            DocumentLoader loader = new DocumentLoader();
-            String documentJson = data.Utils.serialiseField(document);
-            loader.store(document.getId(), document.getType(), documentJson);
-            System.out.println("Local document " + document.getId() + " has been stored remotely.");
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+
+        DocumentLoader loader = new DocumentLoader();
+        String documentJson = data.Utils.serialiseField(document);
+        loader.store(document.getId(), document.getType(), documentJson);
+        System.out.println("Local document " + document.getId() + " has been stored remotely.");
     }
 
     static ArrayList<Document> filterDocumentsByType(ArrayList<Document> documents, String documentType)
@@ -210,7 +204,7 @@ public class DocumentStorage
             saveDocumentLocally(document);
     }
 
-    static void saveRemoteStorage()
+    static void saveRemoteStorage() throws IOException
     {
         ArrayList<Document> newerDocuments = filterDocumentsByNewer(m_documents);
         for (Document document : newerDocuments)
@@ -266,7 +260,7 @@ public class DocumentStorage
         return filterDocumentsNonArchived(filterDocumentsByNewer(filterDocumentsByType(m_documents, type)));
     }
 
-    static public void syncAll()
+    static public void syncAll() throws IOException
     {
         /* Save (or update) all documents locally first */
         saveLocalStorage();
@@ -280,7 +274,7 @@ public class DocumentStorage
         System.out.println("Documents have been synced.");
     }
 
-    static public void syncDocument(Document document)
+    static public void syncDocument(Document document) throws IOException
     {
         saveDocumentLocally(document);
         saveDocumentRemotely(document);
