@@ -139,6 +139,8 @@ public class DocumentStorage
 
     static private void saveDocumentRemotely(Document document)
     {
+        if (document.isArchived())
+            return;
         try
         {
             DocumentLoader loader = new DocumentLoader();
