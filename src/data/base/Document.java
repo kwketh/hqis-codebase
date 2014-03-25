@@ -128,6 +128,7 @@ abstract public class Document extends Group implements Observer
         if (sender instanceof Field)
         {
             Field field = (Field)sender;
+
             if (m_delegate != null)
                 m_delegate.onDocumentFieldModified(this, field);
 

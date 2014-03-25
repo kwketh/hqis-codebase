@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import data.base.Field;
-import data.delegates.GroupDelegate;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,25 +27,6 @@ abstract public class Group extends Field implements Observer
      * List of fields the group contains.
      */
     protected LinkedHashMap<String, Field> m_fields = new LinkedHashMap<String, Field>();
-    protected GroupDelegate m_delegate = new GroupDelegate() {
-        @Override
-        public void onGroupFieldAdded(Field field) {
-            setChanged();
-            notifyObservers("onGroupFieldAdded");
-        }
-
-        @Override
-        public void onGroupFieldRemoved(Field field) {
-            setChanged();
-            notifyObservers("onGroupFieldRemoved");
-        }
-
-        @Override
-        public void onGroupFieldModified(String eventName, Field field) {
-            setChanged();
-            notifyObservers("onGroupFieldModified");
-        }
-    };
 
     public Group(String id, ArrayList<Field> fields)
     {
@@ -54,11 +34,6 @@ abstract public class Group extends Field implements Observer
         for (Field field : fields)
             addField(field);
         setId(id);
-    }
-
-    public void setDelegate(GroupDelegate delegate)
-    {
-        m_delegate = delegate;
     }
 
     public void setId(String id)
@@ -76,9 +51,6 @@ abstract public class Group extends Field implements Observer
 
         m_fields.put(field.getId(), field);
         field.addObserver(this);
-
-        if (m_delegate != null)
-            m_delegate.onGroupFieldAdded(field);
     }
 
     public<FieldType> FieldType lookupField(String id)
@@ -119,8 +91,9 @@ abstract public class Group extends Field implements Observer
         {
             Field field = (Field)sender;
             String eventName = (String)argument;
-            if (m_delegate != null)
-                m_delegate.onGroupFieldModified(eventName, field);
+
+            setChanged();
+            notifyObservers("onGroupFieldModified");
         }
     }
 }

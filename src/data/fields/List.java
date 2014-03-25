@@ -46,6 +46,10 @@ public class List<E extends Field> extends Field implements Observer
     {
         m_fields.add(field);
         field.addObserver(this);
+
+        setChanged();
+        notifyObservers("onListItemAdded");
+
         if (m_delegate != null)
             m_delegate.onListItemAdded(field);
     }
@@ -54,6 +58,9 @@ public class List<E extends Field> extends Field implements Observer
     {
         m_fields.remove(field);
         field.deleteObserver(this);
+
+        setChanged();
+        notifyObservers("onListItemRemoved");
 
         if (m_delegate != null)
             m_delegate.onListItemRemoved(field);
@@ -108,8 +115,12 @@ public class List<E extends Field> extends Field implements Observer
         {
             Field field = (Field)sender;
             String eventName = (String)argument;
+
+            setChanged();
+            notifyObservers("onListItemModified");
+
             if (m_delegate != null)
-                m_delegate.onListAnyItemModified(eventName, field);
+                m_delegate.onListItemModified(eventName, field);
         }
     }
 }

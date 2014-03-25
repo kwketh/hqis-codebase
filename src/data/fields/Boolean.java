@@ -25,7 +25,7 @@ public class Boolean extends data.base.Field
     {
         m_value = value;
         setChanged();
-        notifyObservers("onBooleanModified");
+        notifyObservers("onBooleanChanged");
     }
 
     @Override

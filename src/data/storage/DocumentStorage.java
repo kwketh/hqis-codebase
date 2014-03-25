@@ -242,14 +242,10 @@ public class DocumentStorage
         System.out.println("Local documents (" + documentsFolder.listFiles().length + ") has been loaded.");
     }
 
-    public static void loadRemoteStorage(String documentType)
+    public static void loadRemoteStorage(String documentType) throws IOException
     {
         DocumentListLoader loader = new DocumentListLoader();
-        try {
-            loader.loadFromRemote(documentType);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loader.loadFromRemote(documentType);
         ArrayList<Document> documents = null;
         try {
             documents = loader.constructDocuments();

@@ -28,7 +28,7 @@ public class Text extends data.base.Field
     {
         m_value = value;
         setChanged();
-        notifyObservers("onTextModified");
+        notifyObservers("onTextChanged");
     }
 
     @Override

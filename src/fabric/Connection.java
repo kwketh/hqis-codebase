@@ -51,8 +51,7 @@ public class Connection
         return doRequest(request);
     }
 
-    static private Response doRequest(HttpUriRequest request) throws IOException
-    {
+    static private Response doRequest(HttpUriRequest request) throws IOException {
         Response ret = null;
         RequestConfig defaultRequestConfig = RequestConfig.custom()
                 .setSocketTimeout(8000)
@@ -65,16 +64,7 @@ public class Connection
                 .setDefaultRequestConfig(defaultRequestConfig)
                 .build();
 
-        CloseableHttpResponse response = null;
-        try {
-            response = httpClient.execute(request);
-        } catch (Exception e) {
-            // JOptionPane.showMessageDialog(null, "Unable to perform an online request. Please ensure there is internet\nconnectivity or contact system administrator.", "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("Unable to perform an online request. Please ensure there is internet\nconnectivity or contact system administrator.");
-            e.printStackTrace();
-            response = null;
-        }
-        System.out.println("response = " + response);
+        CloseableHttpResponse response = httpClient.execute(request);
         if (response != null) {
             try {
                 HttpEntity entity = response.getEntity();
