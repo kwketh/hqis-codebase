@@ -219,6 +219,7 @@ public class DocumentStorage
 
     public static void loadLocalStorage()
     {
+        prepareDirectories();
         final String documentsPath = Platform.getDirectoryPath(Platform.Directory.DIRECTORY_DOCUMENTS);
         final File documentsFolder = new File(documentsPath);
         for (final File fileEntry : documentsFolder.listFiles())

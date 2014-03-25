@@ -12,15 +12,15 @@ public class Platform
     }
 
     public static boolean isWindows() {
-        return OS.indexOf("win") >= 0;
+        return OS.contains("win");
     }
 
     public static boolean isMac() {
-        return OS.indexOf("mac") >= 0;
+        return OS.contains("mac");
     }
 
     public static boolean isAndroid() {
-        return OS.indexOf("android") >= 0;
+        return OS.contains("android") || OS.contains("linux"); // (linux on android simulator)
     }
 
     public static String getDirectoryPath(Directory directoryId)
@@ -29,9 +29,12 @@ public class Platform
             return System.getProperty("java.io.tmpdir");
         else if (directoryId == Directory.DIRECTORY_APP)
             return System.getProperty("user.dir");
-        else if (directoryId == Directory.DIRECTORY_DOCUMENTS)
-            return System.getProperty("user.home") + "/hqis/documents";
-        else
+        else if (directoryId == Directory.DIRECTORY_DOCUMENTS) {
+            if (isAndroid())
+                return System.getProperty("java.io.tmpdir") + "/hqis/documents";
+            else
+                return System.getProperty("user.home") + "/hqis/documents";
+        } else
             throw new Error("invalid directoryId");
     }
 

@@ -1,19 +1,21 @@
 package fabric;
 
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import ch.boye.httpclientandroidlib.Consts;
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.client.config.RequestConfig;
+import ch.boye.httpclientandroidlib.client.methods.CloseableHttpResponse;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
+import ch.boye.httpclientandroidlib.entity.ContentType;
+import ch.boye.httpclientandroidlib.entity.StringEntity;
+import ch.boye.httpclientandroidlib.impl.client.CloseableHttpClient;
+import ch.boye.httpclientandroidlib.impl.client.HttpClients;
+import ch.boye.httpclientandroidlib.message.BasicHeader;
+import ch.boye.httpclientandroidlib.protocol.HTTP;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 
-import javax.swing.*;
+// import javax.swing.*;
 import java.io.IOException;
 
 public class Connection
@@ -67,9 +69,12 @@ public class Connection
         try {
             response = httpClient.execute(request);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Unable to perform an online request. Please ensure there is internet\nconnectivity or contact system administrator.", "Error", JOptionPane.ERROR_MESSAGE);
+            // JOptionPane.showMessageDialog(null, "Unable to perform an online request. Please ensure there is internet\nconnectivity or contact system administrator.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Unable to perform an online request. Please ensure there is internet\nconnectivity or contact system administrator.");
+            e.printStackTrace();
             response = null;
         }
+        System.out.println("response = " + response);
         if (response != null) {
             try {
                 HttpEntity entity = response.getEntity();
