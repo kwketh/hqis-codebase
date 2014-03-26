@@ -1,5 +1,6 @@
 package app.documents;
 
+import app.fields.Answer;
 import app.fields.Question;
 import data.base.Field;
 import data.fields.List;
@@ -16,7 +17,7 @@ import java.util.Observable;
  */
 public class Questionnaire extends data.base.Document
 {
-    static final String typeName = "questionnaire";
+    public static final String typeName = "questionnaire";
 
     /**
      * Constructor.
@@ -41,6 +42,20 @@ public class Questionnaire extends data.base.Document
     {
         List<Question> questions = lookupField("questions");
         questions.add(question);
+    }
+
+    public String getQuestionText(String questionId)
+    {
+        List<Question> questions = lookupField("questions");
+        return questions.getById(questionId).getQuestionText();
+    }
+
+    public String getAnswerText(String questionId, String answerId)
+    {
+        List<Question> questions = lookupField("questions");
+        Question question = questions.getById(questionId);
+        List<Answer> answers = question.lookupField("answers");
+        return answers.getById(answerId).getAnswerText();
     }
 
     static protected ArrayList<Field> getFields()

@@ -75,8 +75,9 @@ public class Group extends Field implements Observer
     @Override
     public void fromJSON(JsonElement element) throws IOException
     {
-        if (!element.isJsonObject())
+        if (!element.isJsonObject()) {
             throw new Error("Group failed to parse json element (element is not an Object)");
+        }
         JsonObject object = element.getAsJsonObject();
         for (Map.Entry<String,JsonElement> entry : object.entrySet()) {
             Field field = lookupField(entry.getKey());

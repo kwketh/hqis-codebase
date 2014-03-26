@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 
 public class PatientResult extends data.base.Document
 {
-    static final String typeName = "patient_result";
+    static public final String typeName = "patient_result";
 
     /**
      * Constructor.
@@ -47,6 +47,12 @@ public class PatientResult extends data.base.Document
         Date patientDateOfBirthField = lookupField("patientDateOfBirth");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(patientDateOfBirthField.getValue());
+    }
+
+    public String getQuestionnaireId()
+    {
+        Text questionnaireIdField = lookupField("questionnaireId");
+        return questionnaireIdField.getValue();
     }
 
     public void setPatientName(String patientName)
