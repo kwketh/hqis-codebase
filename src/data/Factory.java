@@ -1,5 +1,6 @@
 package data;
 
+import app.documents.PatientResult;
 import app.documents.Questionnaire;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,7 +17,7 @@ public class Factory
     static
     {
         m_documentRegistry.put("questionnaire", Questionnaire.class);
-
+        m_documentRegistry.put("patient_result", PatientResult.class);
     }
 
     public static <E extends Field> E makeField(Class<E> fieldClass)
