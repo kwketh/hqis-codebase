@@ -66,6 +66,14 @@ public class List<E extends Field> extends Field implements Observer
             m_delegate.onListItemRemoved(field);
     }
 
+    public E getById(String id)
+    {
+        for (E field : m_fields)
+            if (field.getId().equals(id))
+                return field;
+        return null;
+    }
+
     public ArrayList<E> values()
     {
         return m_fields;
@@ -88,8 +96,8 @@ public class List<E extends Field> extends Field implements Observer
         JsonArray array = element.getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             JsonElement iterElement = array.get(i);
-            String id = iterElement.getAsJsonObject().get("id").getAsString();
             try {
+                String id = iterElement.getAsJsonObject().get("id").getAsString();
                 E newItem = null;
                 try {
                     newItem = m_itemClass.getConstructor(String.class).newInstance(id);
@@ -101,6 +109,8 @@ public class List<E extends Field> extends Field implements Observer
                 newItem.fromJSON(iterElement);
                 add(newItem);
             } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
