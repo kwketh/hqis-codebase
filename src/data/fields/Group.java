@@ -21,7 +21,7 @@ import java.util.Observer;
  * serialise and un-serialise the fields values
  * including their ids.
  */
-abstract public class Group extends Field implements Observer
+public class Group extends Field implements Observer
 {
     /**
      * List of fields the group contains.
