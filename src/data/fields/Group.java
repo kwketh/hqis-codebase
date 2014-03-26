@@ -80,7 +80,8 @@ public class Group extends Field implements Observer
         JsonObject object = element.getAsJsonObject();
         for (Map.Entry<String,JsonElement> entry : object.entrySet()) {
             Field field = lookupField(entry.getKey());
-            field.fromJSON(entry.getValue());
+            if (field != null)
+                field.fromJSON(entry.getValue());
         }
     }
 
