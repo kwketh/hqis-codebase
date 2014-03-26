@@ -280,4 +280,12 @@ public class DocumentStorage
         saveDocumentRemotely(document);
     }
 
+    static public void deleteDocumentLocally(Document document)
+    {
+        final String documentPath = getDocumentFilePath(document.getId());
+        final File file = new File(documentPath);
+        file.delete();
+        remove(document);
+    }
+
 }
