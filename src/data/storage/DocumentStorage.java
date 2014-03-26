@@ -70,12 +70,12 @@ public class DocumentStorage
         }
     }
 
-    static private Document getDocumentById(String documentId)
+    static public Document getDocumentById(String documentId)
     {
-        for (Document document : m_documents)
+        for (Document document : filterDocumentsByNewer(m_documents))
         {
             String iterDocumentId = document.getId();
-            if (documentId.equals(iterDocumentId))
+            if (iterDocumentId.equals(documentId))
                 return document;
         }
         return null;
