@@ -2,15 +2,11 @@ package app.documents;
 
 import app.fields.Question;
 import data.base.Field;
-import data.fields.Date;
-import data.fields.Group;
-import data.fields.List;
-import data.fields.Text;
+import data.fields.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class PatientResult extends data.base.Document
@@ -71,7 +67,7 @@ public class PatientResult extends data.base.Document
 
     public void setAnswer(String questionId, String answerId)
     {
-        Group answers = lookupField("answers");
+        HashMap answers = lookupField("answers");
         Text existingAnswerId = answers.lookupField(questionId);
         if (existingAnswerId != null) {
             existingAnswerId.setValue(answerId);
@@ -84,7 +80,7 @@ public class PatientResult extends data.base.Document
 
     public String getAnswerId(String questionId)
     {
-        Group answers = lookupField("answers");
+        HashMap answers = lookupField("answers");
         Text answerIdField = answers.lookupField(questionId);
         if (answerIdField != null)
             return answerIdField.getValue();
@@ -93,7 +89,7 @@ public class PatientResult extends data.base.Document
 
     static protected ArrayList<Field> getFields()
     {
-        Group answers = new Group("answers", new ArrayList<Field>());
+        HashMap answers = new HashMap("answers", new ArrayList<Text>());
         ArrayList<Field> ret = data.base.Document.getFields();
         ret.add(answers);
 
